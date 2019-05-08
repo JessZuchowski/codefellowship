@@ -6,10 +6,15 @@ Buld an app that allows users to create their profiles on CodeFellowship
 
 ## To Use: 
 
-After cloning repo, build app in IntelliJ. Visit localhost for index, signup, and users pages by id. Examples:
+After cloning repo, build app in IntelliJ. Visit localhost for index, signup, users pages by id, myProfile page by id. Examples:
+
 http://localhost:8080/
+
 http://localhost:8080/signup
+
 http://localhost:8080/users/1
+
+http://localhost:8080/myprofile/3
 
 ## Resources:
 
