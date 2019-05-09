@@ -6,6 +6,7 @@ import com.JessZuchowski.codefellowship.database.UserRepository;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,9 +27,26 @@ public class UserController {
     @Autowired
     PasswordEncoder encoder;
 
-    @GetMapping("/signup")
-    public String getSignup() {
+    @GetMapping
+    public String getIndex(@AuthenticationPrincipal ApplicationUser user) {
+        if (user != null) {
+            return "redirect:/myprofile/" + user.getId();
+        }
+        return "index";
+    }
 
+    @GetMapping("/landing")
+    public String getLanding() {
+        return "index";
+    }
+
+    @GetMapping("/signup")
+    public String getSignup(
+            @AuthenticationPrincipal ApplicationUser user
+    ) {
+        if (user != null) {
+
+        }
         return "signup";
     }
 //    POST, save to DB
@@ -58,21 +76,26 @@ public class UserController {
                 user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(token);
 
-        return new RedirectView("/myprofile");
+        return new RedirectView("/myprofile/" + user.getId());
     }
 
 //    login
     @GetMapping("/login")
-    public String getLogin() {
-
+    public String getLogin(
+            @RequestParam(required = false, defaultValue = "false") boolean isErrored,
+            Model model
+    ) {
+        model.addAttribute("errored", isErrored);
         return "login";
     }
 
     @GetMapping("/login-error")
     @ResponseBody
-    public String getLoginError() {
+    public String getLoginError(Model model) {
 
-        return "Incorrect Username or Password";
+        model.addAttribute("errored", true);
+
+        return "login";
     }
 
     //view single user details

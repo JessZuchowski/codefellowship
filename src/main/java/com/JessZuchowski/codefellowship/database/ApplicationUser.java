@@ -1,13 +1,9 @@
 package com.JessZuchowski.codefellowship.database;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +23,13 @@ public class ApplicationUser implements UserDetails {
     private String lastName;
     private String dateOfBirth;
     private String bio;
+
+    @OneToMany(mappedBy = "applicationUser")
+    public List<UserPost> userPost;
+
+    public ApplicationUser() {
+        userPost = new ArrayList<>();
+    }
 
     public long getId() {
         return this.id;

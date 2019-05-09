@@ -8,16 +8,23 @@
 <div>
     <h2>My Profile</h2>
     <br>
-    <p>View your profile details</p>
+    <h3>View your profile details</h3>
     <br>
     <div th:each="ApplicationUser : ${myProfile}">
-        <div th:text="${ApplicationUser.id}"/>
         <div th:text="${ApplicationUser.username}"/>
         <div th:text="${ApplicationUser.firstName}"/>
         <div th:text="${ApplicationUser.lastName}"/>
         <div th:text="${ApplicationUser.dateOfBirth}"/>
         <div th:text="${ApplicationUser.bio}"/>
     </div>
+    <br>
+    <form action="/addPost" method="post">
+        <input type="text" name="addAPost" placeholder="Add your post here">
+        <button type="submit">Submit</button>
+    </form>
+    <br>
+    <h3>View your posts</h3>
+
 
 </div>
 </body>
