@@ -2,6 +2,8 @@ package com.JessZuchowski.codefellowship.controllers;
 
 import com.JessZuchowski.codefellowship.UserNotFoundException;
 import com.JessZuchowski.codefellowship.database.ApplicationUser;
+import com.JessZuchowski.codefellowship.database.PostRepository;
+import com.JessZuchowski.codefellowship.database.UserPost;
 import com.JessZuchowski.codefellowship.database.UserRepository;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +18,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.security.Principal;
+import java.util.Date;
 import java.util.Optional;
 
 @Controller
 public class UserController {
 
     @Autowired
-    UserRepository repo;
+    UserRepository userRepo;
+
+    @Autowired
+    PostRepository postRepo;
 
     @Autowired
     PasswordEncoder encoder;
@@ -35,21 +42,58 @@ public class UserController {
         return "index";
     }
 
-    @GetMapping("/landing")
+    @GetMapping("/")
     public String getLanding() {
         return "index";
     }
 
     @GetMapping("/signup")
     public String getSignup(
-            @AuthenticationPrincipal ApplicationUser user
-    ) {
-        if (user != null) {
+            @AuthenticationPrincipal ApplicationUser user) {
 
+        if (user != null) {
         }
         return "signup";
     }
+
+    @GetMapping("/addPost")
+    public String getAddPost(
+            @AuthenticationPrincipal ApplicationUser user) {
+
+        if (user != null) {
+        }
+        return "signup";
+    }
+
+    @GetMapping("/addPost")
+    public String addPost(
+            Model model2,
+            @PathVariable long id
+    ) {
+        Optional<UserPost> post = this.postRepo.findById(id);
+        if (post.isPresent()) {
+            model2.addAttribute("addPost", post.get());
+        }
+            return "addPost";
+    }
+
+
 //    POST, save to DB
+    @PostMapping("/addPost")
+    public RedirectView addPost(
+            @RequestParam String addAPost,
+            @AuthenticationPrincipal ApplicationUser applicationUser
+    ) {
+        UserPost post = new UserPost();
+        post.setAddAPost(addAPost);
+        post.setApplicationUser(applicationUser);
+
+        post.setPostedAt(new Date());
+        post = postRepo.save(post);
+
+        return new RedirectView("/myprofile/");
+    }
+
     @PostMapping("/signup")
     public RedirectView postSignup(
             @RequestParam String username,
@@ -67,7 +111,7 @@ public class UserController {
         user.setDateOfBirth(dateOfBirth);
         user.setBio(bio);
 
-        repo.save(user);
+        userRepo.save(user);
 
         //to auto login
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
@@ -86,7 +130,7 @@ public class UserController {
             Model model
     ) {
         model.addAttribute("errored", isErrored);
-        return "login";
+        return "/login";
     }
 
     @GetMapping("/login-error")
@@ -104,7 +148,7 @@ public class UserController {
             Model model,
             @PathVariable Long id
     ) {
-        Optional<ApplicationUser> user = this.repo.findById(id);
+        Optional<ApplicationUser> user = this.userRepo.findById(id);
         if (user.isPresent()) {
             model.addAttribute("users" , user.get());
             return "users";
@@ -114,12 +158,12 @@ public class UserController {
     }
 
     //view profile page
-    @GetMapping("/myprofile/{id}")
+    @GetMapping("/myprofile")
     public String myProfile(
             Model model1,
             @PathVariable Long id
     ) {
-        Optional<ApplicationUser> user = this.repo.findById(id);
+        Optional<ApplicationUser> user = this.userRepo.findById(id);
         if (user.isPresent()) {
             model1.addAttribute("myProfile" , user.get());
             return "myProfile";

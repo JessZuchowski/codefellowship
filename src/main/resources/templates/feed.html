@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Feed</title>
+</head>
+<body>
+
+<h2 th:text="${ApplicationUser.username}"></h2>
+
+<div th:each="UserPost : ${addAPost}">
+    <h3 th:text="${UserPost.addAPost}"></h3>
+</div>
+
+</body>
+</html>

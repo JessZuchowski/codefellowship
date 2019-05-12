@@ -23,19 +23,21 @@ public class FollowController {
     @Autowired
     UserRepository userRepo;
 
-    @GetMapping("/test")
-    public String test() {
-        ApplicationUser user1 = new ApplicationUser("Yew");
-        userRepo.save(user1);
-
-        ApplicationUser user2 = new ApplicationUser("Uma");
-        userRepo.save(user2);
-
-        UserFollow follow = new UserFollow(user1, user2, new Date());
-        followRepo.save(follow);
-
-        return "redirect:/feed/";
-    }
+//    @GetMapping("/test")
+//    public String test() {
+//        ApplicationUser user1;
+//        user1 = user1.setFirstName("Yew");
+//        userRepo.save(user1);
+//
+//        ApplicationUser user2;
+//        user2 = user2.setFirstName("Uma");
+//        userRepo.save(user2);
+//
+//        UserFollow follow = new UserFollow(user1, user2, new Date());
+//        followRepo.save(follow);
+//
+//        return "redirect:/feed/";
+//    }
 
     @GetMapping
     public String index(Model model) {

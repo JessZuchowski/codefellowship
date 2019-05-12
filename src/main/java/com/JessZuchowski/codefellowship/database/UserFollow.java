@@ -19,24 +19,17 @@ public class UserFollow {
 
     public Date followedOn;
 
-    public UserFollow() {
-
-    }
-
-    public UserFollow(ApplicationUser followed, ApplicationUser following, Date followedOn) {
-        this.isBeingFollowed = followed;
-        this.isFollowing = following;
-        this.followedOn = followedOn;
-    }
 
     public long getId() {
         return id;
+    }
+    public void setId(long id) {
+        this.id = id;
     }
 
     public ApplicationUser getIsBeingFollowed() {
         return isBeingFollowed;
     }
-
     public void setIsBeingFollowed(ApplicationUser isBeingFollowed) {
         this.isBeingFollowed = isBeingFollowed;
     }
@@ -44,12 +37,14 @@ public class UserFollow {
     public ApplicationUser getIsFollowing() {
         return isFollowing;
     }
-
     public void setIsFollowing(ApplicationUser isFollowing) {
         this.isFollowing = isFollowing;
     }
 
    public Date getFollowedOn() {
         return followedOn;
+   }
+   public void setFollowedOn(Date followedOn) {
+        this.followedOn = followedOn;
    }
 }
