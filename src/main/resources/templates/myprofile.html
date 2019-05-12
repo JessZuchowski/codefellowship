@@ -24,7 +24,9 @@
     </form>
     <br>
     <h3>View your posts</h3>
-
+<div>
+    <div th:each="UserPost : ${ApplicationUser.addAPost}"/>
+</div>
 
 </div>
 </body>
