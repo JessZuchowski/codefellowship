@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div>
+    <div th:each="ApplicationUser : ${users}">
+        <div th:text="${ApplicationUser.id}"/>
+        <div th:text="${ApplicationUser.username}"/>
+        <div th:text="${ApplicationUser.firstName}"/>
+        <div th:text="${ApplicationUser.lastName}"/>
+        <div th:text="${ApplicationUser.dateOfBirth}"/>
+        <div th:text="${ApplicationUser.bio}"/>
+    </div>
+</div>
+</body>
+</html>
