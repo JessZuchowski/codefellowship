@@ -5,12 +5,15 @@ import com.JessZuchowski.codefellowship.database.ApplicationUser;
 import com.JessZuchowski.codefellowship.database.UserRepository;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
@@ -30,7 +33,7 @@ public class UserController {
     }
 //    POST, save to DB
     @PostMapping("/signup")
-    public String postSignup(
+    public RedirectView postSignup(
             @RequestParam String username,
             @RequestParam String password,
             @RequestParam String firstName,
@@ -48,15 +51,21 @@ public class UserController {
 
         repo.save(user);
 
-//        return "/login";
-        return "/index";
+        //to auto login
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                user,
+                null,
+                user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(token);
+
+        return new RedirectView("/myprofile");
     }
 
 //    login
     @GetMapping("/login")
     public String getLogin() {
 
-        return "/index";
+        return "login";
     }
 
     @GetMapping("/login-error")
@@ -76,6 +85,21 @@ public class UserController {
         if (user.isPresent()) {
             model.addAttribute("users" , user.get());
             return "users";
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+
+    //view profile page
+    @GetMapping("/myprofile/{id}")
+    public String myProfile(
+            Model model1,
+            @PathVariable Long id
+    ) {
+        Optional<ApplicationUser> user = this.repo.findById(id);
+        if (user.isPresent()) {
+            model1.addAttribute("myProfile" , user.get());
+            return "myProfile";
         } else {
             throw new UserNotFoundException();
         }
